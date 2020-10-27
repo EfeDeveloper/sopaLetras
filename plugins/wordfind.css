@@ -1,0 +1,146 @@
+/*
+* Wordfind.js 0.0.1
+* (c) 2012 Bill, BunKat LLC.
+* Wordfind is freely distributable under the MIT license.
+* For all details and documentation:
+*     http://github.com/bunkat/wordfind
+*/
+:root {
+  --Completed: #1e90ff;
+  --Solved: #2ed573;
+  --Found: #ff9f43;
+  --Selected: #04cdff;
+  --Puzzle: #2c3e50;
+  --puzzleSquare: ##f5f6fa;
+  --White: #ffff;
+  --Border: #8c0a35;
+}
+
+body {
+  font: 1em Arial;
+}
+
+
+
+/*
+* Styles for the puzzle
+*/
+#puzzle {
+  display: flex;
+  border: 5px solid var(--Border);
+  padding: 3vw;
+  opacity: 50;
+}
+
+#puzzle>div {
+  /*
+  *rows
+  */
+  width: 100%;
+  margin: 0 auto;
+  opacity: 50;
+}
+
+/*
+*style for each square in the puzzle
+*/
+.puzzleSquare {
+
+  text-transform: uppercase;
+  background-color: var(--puzzleSquare);
+  border: 2;
+  font: vw sans-serif;
+  opacity: 50;
+}
+
+
+#puzzle {
+  float: left;
+  padding: 0.5rem;
+}
+
+.puzzleSquare {
+  height: 1rem;
+  width: 1rem;
+  font: 1rem sans-serif;
+  opacity: 50;
+}
+
+.form-container2{
+  display: flex;
+  justify-content: center;
+}
+
+.form-box2{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+/* 
+*indicates when a square has been selected
+*/
+#puzzle .selected {
+  background-color: var(--Selected);
+  color: var(--White);
+}
+
+/* 
+*indicates that the square is part of a word that has been found
+*/
+#puzzle .found {
+  background-color: var(--Found);
+  color: var(--White);
+}
+
+#puzzle .solved {
+  background-color: var(--Solved);
+  color: var(--White);
+}
+
+/*
+*indicates that all words have been found
+*/
+#puzzle .complete {
+  background-color: var(--Completed);
+  color: var(--White);
+}
+
+/*
+* Styles for the word list
+*/
+#words {
+  display: inline-block;
+  max-width: 30rem;
+  padding: 1em;
+  list-style-type: none;
+  text-align: left;
+}
+
+
+#words {
+  -moz-column-count: 2;
+  -webkit-column-count: 2;
+  column-count: 2;
+  column-gap: 20px;
+}
+
+
+#words li {
+  padding: 3px 0;
+  font: 1em sans-serif;
+}
+
+/* 
+*indicates that the word has been found
+*/
+.wordFound {
+  text-decoration: line-through;
+  color: red;
+}
