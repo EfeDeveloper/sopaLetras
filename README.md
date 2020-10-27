@@ -19,11 +19,6 @@ _Descargar el plugin wordfind: https://github.com/bunkat/wordfind gracias al se�
 
 ## Construido con 🛠️
 
-- _HTML_
-- _CSS_
-- _Bootstrap 4_
-- _jQuery_
-
 - [HTML](https://www.w3schools.com/html/)
 - [CSS](https://www.w3schools.com/css/default.asp)
 - [Bootstrap 4](https://getbootstrap.com)

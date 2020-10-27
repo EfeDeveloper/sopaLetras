@@ -48,7 +48,7 @@ body {
 
   text-transform: uppercase;
   background-color: var(--puzzleSquare);
-  border: 2;
+  border: 2px;
   font: vw sans-serif;
   opacity: 50;
 }
@@ -60,8 +60,8 @@ body {
 }
 
 .puzzleSquare {
-  height: 1rem;
-  width: 1rem;
+  height: 20px;
+  width: 24px;
   font: 1rem sans-serif;
   opacity: 50;
 }
