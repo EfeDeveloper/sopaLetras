@@ -6,14 +6,6 @@ const COMPLETE_DELAY = 500;
 
 export class WordFindGame {
   constructor(words, puzzleSelector, wordsSelector, options = {}) {
-    this.originalWords = words.map(w => w.trim());
-    this.words = words.map(w => w.toUpperCase().replace(/\s+/g, '').trim());
-    
-    this.wordMap = {};
-    this.words.forEach((normalized, index) => {
-      this.wordMap[normalized] = this.originalWords[index];
-    });
-    
     this.puzzleEl = document.querySelector(puzzleSelector);
     this.wordsEl = document.querySelector(wordsSelector);
     this.options = options;
@@ -38,21 +30,57 @@ export class WordFindGame {
       throw new Error('Elementos del puzzle o palabras no encontrados');
     }
 
-    this.init();
+    this.initWithWords(words);
   }
 
-  init() {
-    try {
-      this.puzzleData = this.generator.generate(this.words, this.size);
-      this.puzzle = this.puzzleData.grid;
+  initWithWords(words) {
+    const allOriginalWords = words.map(w => w.trim());
+    const allNormalizedWords = words.map(w => w.toUpperCase().replace(/\s+/g, '').trim());
+    
+    const maxAttempts = 3;
+    let attempt = 0;
+    let success = false;
+    
+    while (attempt < maxAttempts && !success) {
+      try {
+        this.puzzleData = this.generator.generate(allNormalizedWords, this.size);
+        this.puzzle = this.puzzleData.grid;
+        
+        const placedWords = this.puzzleData.placements.map(p => p.word);
+        const placementRate = placedWords.length / allNormalizedWords.length;
+        
+        if (placementRate >= 0.6) {
+          this.words = [];
+          this.originalWords = [];
+          this.wordMap = {};
+          
+          allNormalizedWords.forEach((normalized, index) => {
+            if (placedWords.includes(normalized)) {
+              this.words.push(normalized);
+              this.originalWords.push(allOriginalWords[index]);
+              this.wordMap[normalized] = allOriginalWords[index];
+            }
+          });
 
-      this.drawPuzzle();
-      this.drawWords();
-      this.attachEvents();
-    } catch (error) {
-      console.error('Error al inicializar el juego:', error);
-      throw error;
+          console.log(`✅ Palabras colocadas: ${this.words.length}/${allNormalizedWords.length} (${Math.round(placementRate * 100)}%)`);
+          success = true;
+        } else {
+          console.warn(`⚠️ Intento ${attempt + 1}: Solo ${placedWords.length}/${allNormalizedWords.length} colocadas, reintentando...`);
+          attempt++;
+        }
+      } catch (error) {
+        console.error('Error al generar puzzle:', error);
+        attempt++;
+      }
     }
+    
+    if (!success) {
+      throw new Error('No se pudo generar un puzzle válido después de varios intentos');
+    }
+
+    this.drawPuzzle();
+    this.drawWords();
+    this.attachEvents();
   }
 
   drawPuzzle() {
@@ -186,7 +214,7 @@ export class WordFindGame {
    * Selecciona un cuadrado
    */
   selectSquare(square) {
-    if (!square || square.classList.contains('found')) {
+    if (!square) {
       return;
     }
 
@@ -364,20 +392,29 @@ export class WordFindGame {
       
       if (solutions && solutions.found && solutions.found.length > 0) {
         const wordSolution = solutions.found[0];
-        const firstPos = wordSolution.path[0];
-        const firstSquare = this.puzzleEl.querySelector(
-          `[data-row="${firstPos.y}"][data-col="${firstPos.x}"]`
-        );
+        const hintSquares = [];
+        const lettersToShow = Math.min(2, wordSolution.path.length);
         
-        if (firstSquare) {
-          firstSquare.classList.add('!bg-yellow-400', '!text-gray-900', '!border-yellow-500', 'animate-pulse', 'scale-110', 'shadow-2xl', 'z-10', 'relative');
+        for (let i = 0; i < lettersToShow; i++) {
+          const pos = wordSolution.path[i];
+          const square = this.puzzleEl.querySelector(
+            `[data-row="${pos.y}"][data-col="${pos.x}"]`
+          );
           
-          setTimeout(() => {
-            firstSquare.classList.remove('!bg-yellow-400', '!text-gray-900', '!border-yellow-500', 'animate-pulse', 'scale-110', 'shadow-2xl', 'z-10', 'relative');
-          }, HINT_DURATION);
+          if (square) {
+            square.classList.add('!bg-gradient-to-br', '!from-yellow-300', '!to-yellow-500', '!text-gray-900', '!font-bold', '!border-4', '!border-yellow-600', 'animate-bounce', '!scale-125', '!shadow-[0_0_30px_rgba(250,204,21,0.8)]', '!z-50', '!relative');
+            hintSquares.push(square);
+          }
         }
         
+        setTimeout(() => {
+          hintSquares.forEach(square => {
+            square.classList.remove('!bg-gradient-to-br', '!from-yellow-300', '!to-yellow-500', '!text-gray-900', '!font-bold', '!border-4', '!border-yellow-600', 'animate-bounce', '!scale-125', '!shadow-[0_0_30px_rgba(250,204,21,0.8)]', '!z-50', '!relative');
+          });
+        }, HINT_DURATION);
+        
         const originalWord = this.wordMap[randomWord] || randomWord;
+        const firstPos = wordSolution.path[0];
         
         return {
           word: originalWord,

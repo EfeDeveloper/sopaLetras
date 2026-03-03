@@ -179,13 +179,19 @@ class WordSearchApp {
 
     this.elements.hintBtn.addEventListener('click', () => {
       if (this.game && this.isGameActive) {
+        const state = this.game.getState();
+        if (state.remaining === 0) {
+          this.showError('¡Ya encontraste todas las palabras!');
+          return;
+        }
+        
         const hint = this.game.getHint();
         if (hint) {
           this.scoreSystem.addPenalty(50);
           this.updateScore();
           this.showHintAnimation(hint);
         } else {
-          this.showError('Ya encontraste todas las palabras!');
+          this.showError('No se pudo obtener una pista. Intenta de nuevo.');
         }
       }
     });
@@ -239,24 +245,34 @@ class WordSearchApp {
     });
   }
 
+  getGridSize(difficulty) {
+    switch (difficulty) {
+      case 'easy':
+        return 12;
+      case 'medium':
+        return 15;
+      case 'hard':
+        return 17;
+      default:
+        return 15;
+    }
+  }
+
   async startNewGame() {
     try {
       this.showLoading();
       
-      // Obtener configuraciones
       const difficulty = this.elements.difficultySelect.value;
+      const gridSize = this.getGridSize(difficulty);
       
-      // Destruir juego anterior si existe
       if (this.game) {
         this.game.destroy();
       }
       
-      // Reiniciar timer y score
       this.timer.reset();
       this.scoreSystem = new ScoreSystem(difficulty);
       
-      // Obtener palabras
-      this.currentWords = await this.wordAPI.fetchWords(15, 'es', {
+      this.currentWords = await this.wordAPI.fetchWords(14, 'es', {
         difficulty
       });
 
@@ -264,18 +280,15 @@ class WordSearchApp {
         throw new Error('No se pudieron obtener palabras');
       }
 
-      // Crear nuevo juego con opciones
       this.game = new WordFindGame(
         this.currentWords,
         '#puzzle',
         '#words',
-        { size: 15 }
+        { size: gridSize }
       );
 
-      // Configurar puntaje
       this.scoreSystem.setTotalWords(this.currentWords.length);
       
-      // Adjuntar event handlers del juego
       this.game.on('wordFound', (data) => {
         this.onWordFound(data);
       });
@@ -284,15 +297,11 @@ class WordSearchApp {
         this.onGameComplete(data);
       });
 
-      this.game.on('selectionChange', (data) => {
-        // Opcional: mostrar feedback visual de la selección
-      });
+      this.game.on('selectionChange', (data) => {});
 
-      // Iniciar timer
       this.timer.start();
       this.isGameActive = true;
       
-      // Actualizar UI
       this.updateProgress();
       this.updateScore();
       
@@ -303,22 +312,17 @@ class WordSearchApp {
       this.hideLoading();
       this.showError('Error al cargar el juego. Intentando con palabras locales...');
       
-      // Intentar con palabras de emergencia
       setTimeout(() => {
         this.startNewGame();
       }, 2000);
     }
   }
 
-  /**
-   * Maneja cuando se encuentra una palabra
-   */
   onWordFound(data) {
     const points = this.scoreSystem.addWord(data.word);
     this.updateScore();
     this.updateProgress();
     
-    // Efecto de animación (opcional)
     this.showWordFoundAnimation(data.word, points);
   }
 
