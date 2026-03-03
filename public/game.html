@@ -1,192 +1,269 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Jugar - Sopa de Letras</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="shortcut icon" href="../image/Browser.ico" type="image/x-icon" />
-  <link rel="stylesheet" href="../public/output.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Jugar - Sopa de Letras</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" href="../image/Browser.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="./output.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body class="bg-gradient-to-br from-pink-900 dark:from-gray-900 to-purple-900 dark:to-gray-800 min-h-screen font-poppins">
-  
-  <!-- Botón Modo Oscuro -->
-  <button id="darkModeToggle" class="top-4 right-4 z-50 fixed bg-white/20 dark:bg-gray-700/50 shadow-lg hover:shadow-xl backdrop-blur-sm p-3 rounded-full text-white hover:scale-110 transition-all duration-300" aria-label="Alternar modo oscuro">
-    <span class="dark:hidden text-xl">🌙</span>
-    <span class="hidden dark:inline text-xl">☀️</span>
-  </button>
+  <body
+    class="bg-gradient-to-br from-pink-900 dark:from-gray-900 to-purple-900 dark:to-gray-800 min-h-screen font-poppins"
+  >
+    <!-- Botón Modo Oscuro -->
+    <button
+      id="darkModeToggle"
+      class="top-4 right-4 z-50 fixed bg-white/20 dark:bg-gray-700/50 shadow-lg hover:shadow-xl backdrop-blur-sm p-3 rounded-full text-white hover:scale-110 transition-all duration-300"
+      aria-label="Alternar modo oscuro"
+    >
+      <span class="dark:hidden text-xl">🌙</span>
+      <span class="hidden dark:inline text-xl">☀️</span>
+    </button>
 
-  <!-- Contenedor Principal -->
-  <div class="mx-auto px-4 py-6 md:py-10 container">
-    
-    <!-- Header -->
-    <div class="mb-6 text-center">
-      <h1 class="mb-2 font-bold text-white text-3xl md:text-4xl">🎮 Sopa de Letras</h1>
-      <p class="text-white/80 dark:text-gray-300">Encuentra todas las palabras ocultas</p>
-    </div>
-
-    <!-- Layout Principal -->
-    <div class="gap-6 grid grid-cols-1 lg:grid-cols-3 mx-auto max-w-7xl">
-      
-      <!-- Panel Izquierdo - Controles -->
-      <div class="space-y-4 lg:col-span-1">
-        
-        <!-- Card de Configuración -->
-        <div class="bg-white dark:bg-gray-800 shadow-xl p-6 rounded-2xl transition-all duration-300">
-          <h2 class="flex items-center mb-4 font-bold text-gray-800 dark:text-gray-100 text-xl">
-            <span class="mr-2">⚙️</span> Configuración
-          </h2>
-          
-          <!-- Selector de Dificultad -->
-          <div class="mb-4">
-            <label for="difficulty" class="block mb-2 font-medium text-gray-700 dark:text-gray-300 text-sm">
-              Dificultad
-            </label>
-            <select id="difficulty" class="bg-white dark:bg-gray-700 p-3 border border-gray-300 focus:border-transparent dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 w-full text-gray-800 dark:text-gray-200 transition-colors">
-              <option value="easy">😊 Fácil (3-6 letras)</option>
-              <option value="medium" selected>😐 Medio (6-9 letras)</option>
-              <option value="hard">😤 Difícil (9-12 letras)</option>
-            </select>
-          </div>
-
-          <!-- Botones de Acción -->
-          <div class="space-y-2">
-            <button id="newGame" class="bg-gradient-to-r from-pink-600 hover:from-pink-700 to-fuchsia-600 hover:to-fuchsia-700 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-white hover:scale-105 transition-all duration-300 transform">
-              🎮 Nuevo Juego
-            </button>
-            <button id="hint" class="bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-white transition-all duration-300">
-              💡 Pista (-50 pts)
-            </button>
-            <button id="solve" class="bg-gray-600 hover:bg-gray-700 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-white transition-all duration-300">
-              🔍 Resolver (-500 pts)
-            </button>
-            <a href="../index.html" class="block bg-white hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-gray-800 dark:text-gray-200 text-center transition-all duration-300">
-              ← Volver al Inicio
-            </a>
-          </div>
-        </div>
-
-        <!-- Card de Estadísticas -->
-        <div class="bg-white dark:bg-gray-800 shadow-xl p-6 rounded-2xl transition-all duration-300">
-          <h2 class="flex items-center mb-4 font-bold text-gray-800 dark:text-gray-100 text-xl">
-            <span class="mr-2">📊</span> Estadísticas
-          </h2>
-          
-          <!-- Timer -->
-          <div class="mb-4 text-center">
-            <div class="mb-1 text-gray-600 dark:text-gray-400 text-sm">Tiempo</div>
-            <div id="timer" class="font-mono font-bold text-pink-600 dark:text-fuchsia-400 text-4xl">
-              00:00
-            </div>
-          </div>
-
-          <!-- Puntaje -->
-          <div class="mb-4 text-center">
-            <div class="mb-1 text-gray-600 dark:text-gray-400 text-sm">Puntaje</div>
-            <div id="score" class="font-bold text-gray-800 dark:text-gray-100 text-3xl">
-              0
-            </div>
-          </div>
-
-          <!-- Progreso -->
-          <div class="mb-2">
-            <div class="flex justify-between mb-1 text-gray-600 dark:text-gray-400 text-sm">
-              <span>Progreso</span>
-              <span id="progressText">0/0</span>
-            </div>
-            <div class="bg-gray-200 dark:bg-gray-700 rounded-full w-full h-3 overflow-hidden">
-              <div id="progressBar" class="bg-gradient-to-r from-pink-600 to-fuchsia-600 rounded-full h-full transition-all duration-500" style="width: 0%"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card de Instrucciones -->
-        <div class="bg-blue-50 dark:bg-blue-900/20 shadow-xl p-6 border-blue-500 dark:border-blue-400 border-l-4 rounded-2xl">
-          <h3 class="mb-2 font-bold text-blue-800 dark:text-blue-300 text-lg">
-            💡 Instrucciones
-          </h3>
-          <ul class="space-y-1 text-blue-700 dark:text-blue-200 text-sm">
-            <li>• Selecciona las letras con el cursor o dedo</li>
-            <li>• Las palabras pueden estar en cualquier dirección</li>
-            <li>• Las palabras encontradas se tacharán de la lista</li>
-            <li>• ¡Completa todo el puzzle para ganar!</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Panel Derecho - Puzzle y Palabras -->
-      <div class="space-y-4 lg:col-span-2">
-        
-        <!-- Card del Puzzle -->
-        <div class="bg-white dark:bg-gray-800 shadow-xl p-6 rounded-2xl transition-all duration-300">
-          <h2 class="mb-4 font-bold text-gray-800 dark:text-gray-100 text-xl text-center">
-            🧩 Puzzle
-          </h2>
-          <div id="puzzle" class="flex justify-center items-center p-2 max-w-full min-h-[300px] overflow-auto">
-            <!-- El puzzle se renderizará aquí -->
-          </div>
-        </div>
-
-        <!-- Card de Palabras -->
-        <div class="bg-white dark:bg-gray-800 shadow-xl p-6 rounded-2xl transition-all duration-300">
-          <h2 class="mb-4 font-bold text-gray-800 dark:text-gray-100 text-xl text-center">
-            📝 Palabras a Encontrar
-          </h2>
-          <div id="words" class="text-center">
-            <!-- La lista de palabras se renderizará aquí -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de Completado -->
-  <div id="completionModal" class="hidden z-50 fixed inset-0 justify-center items-center bg-black/50 backdrop-blur-sm p-4">
-    <div class="bg-white dark:bg-gray-800 opacity-0 shadow-2xl p-8 rounded-3xl w-full max-w-md scale-95 transition-all duration-300 transform" id="modalContent">
-      <div class="text-center">
-        <div class="mb-4 text-6xl" id="modalIcon">🎉</div>
-        <h2 class="mb-2 font-bold text-gray-800 dark:text-gray-100 text-3xl" id="modalTitle">
-          ¡Felicitaciones!
-        </h2>
-        <p class="mb-6 text-gray-600 dark:text-gray-300" id="modalMessage">
-          Has completado el puzzle
+    <!-- Contenedor Principal -->
+    <div class="mx-auto px-4 py-6 md:py-10 container">
+      <!-- Header -->
+      <div class="mb-6 text-center">
+        <h1 class="mb-2 font-bold text-white text-3xl md:text-4xl">🎮 Sopa de Letras</h1>
+        <p class="text-white/80 dark:text-gray-300">
+          Encuentra todas las palabras ocultas
         </p>
-        
-        <div class="space-y-2 bg-gray-50 dark:bg-gray-700/50 mb-6 p-4 rounded-xl">
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600 dark:text-gray-400">Tiempo:</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200" id="modalTime">00:00</span>
+      </div>
+
+      <!-- Layout Principal -->
+      <div class="gap-6 grid grid-cols-1 lg:grid-cols-3 mx-auto max-w-7xl">
+        <!-- Panel Izquierdo - Controles -->
+        <div class="space-y-4 lg:col-span-1">
+          <!-- Card de Configuración -->
+          <div
+            class="bg-white dark:bg-gray-800 shadow-xl p-6 rounded-2xl transition-all duration-300"
+          >
+            <h2
+              class="flex items-center mb-4 font-bold text-gray-800 dark:text-gray-100 text-xl"
+            >
+              <span class="mr-2">⚙️</span> Configuración
+            </h2>
+
+            <!-- Selector de Dificultad -->
+            <div class="mb-4">
+              <label
+                for="difficulty"
+                class="block mb-2 font-medium text-gray-700 dark:text-gray-300 text-sm"
+              >
+                Dificultad
+              </label>
+              <select
+                id="difficulty"
+                class="bg-white dark:bg-gray-700 p-3 border border-gray-300 focus:border-transparent dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-pink-500 w-full text-gray-800 dark:text-gray-200 transition-colors"
+              >
+                <option value="easy">😊 Fácil (3-6 letras)</option>
+                <option value="medium" selected>😐 Medio (6-9 letras)</option>
+                <option value="hard">😤 Difícil (9-12 letras)</option>
+              </select>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="space-y-2">
+              <button
+                id="newGame"
+                class="bg-gradient-to-r from-pink-600 hover:from-pink-700 to-fuchsia-600 hover:to-fuchsia-700 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-white hover:scale-105 transition-all duration-300 transform"
+              >
+                🎮 Nuevo Juego
+              </button>
+              <button
+                id="hint"
+                class="bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-white transition-all duration-300"
+              >
+                💡 Pista (-50 pts)
+              </button>
+              <button
+                id="solve"
+                class="bg-gray-600 hover:bg-gray-700 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-white transition-all duration-300"
+              >
+                🔍 Resolver (-500 pts)
+              </button>
+              <a
+                href="../index.html"
+                class="block bg-white hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-gray-800 dark:text-gray-200 text-center transition-all duration-300"
+              >
+                ← Volver al Inicio
+              </a>
+            </div>
           </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600 dark:text-gray-400">Puntaje:</span>
-            <span class="font-semibold text-gray-800 dark:text-gray-200" id="modalScore">0</span>
+
+          <!-- Card de Estadísticas -->
+          <div
+            class="bg-white dark:bg-gray-800 shadow-xl p-6 rounded-2xl transition-all duration-300"
+          >
+            <h2
+              class="flex items-center mb-4 font-bold text-gray-800 dark:text-gray-100 text-xl"
+            >
+              <span class="mr-2">📊</span> Estadísticas
+            </h2>
+
+            <!-- Timer -->
+            <div class="mb-4 text-center">
+              <div class="mb-1 text-gray-600 dark:text-gray-400 text-sm">Tiempo</div>
+              <div
+                id="timer"
+                class="font-mono font-bold text-pink-600 dark:text-fuchsia-400 text-4xl"
+              >
+                00:00
+              </div>
+            </div>
+
+            <!-- Puntaje -->
+            <div class="mb-4 text-center">
+              <div class="mb-1 text-gray-600 dark:text-gray-400 text-sm">Puntaje</div>
+              <div id="score" class="font-bold text-gray-800 dark:text-gray-100 text-3xl">
+                0
+              </div>
+            </div>
+
+            <!-- Progreso -->
+            <div class="mb-2">
+              <div
+                class="flex justify-between mb-1 text-gray-600 dark:text-gray-400 text-sm"
+              >
+                <span>Progreso</span>
+                <span id="progressText">0/0</span>
+              </div>
+              <div
+                class="bg-gray-200 dark:bg-gray-700 rounded-full w-full h-3 overflow-hidden"
+              >
+                <div
+                  id="progressBar"
+                  class="bg-gradient-to-r from-pink-600 to-fuchsia-600 rounded-full h-full transition-all duration-500"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
           </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600 dark:text-gray-400">Calificación:</span>
-            <span class="font-semibold text-yellow-500" id="modalRating">⭐⭐⭐</span>
+
+          <!-- Card de Instrucciones -->
+          <div
+            class="bg-blue-50 dark:bg-blue-900/20 shadow-xl p-6 border-blue-500 dark:border-blue-400 border-l-4 rounded-2xl"
+          >
+            <h3 class="mb-2 font-bold text-blue-800 dark:text-blue-300 text-lg">
+              💡 Instrucciones
+            </h3>
+            <ul class="space-y-1 text-blue-700 dark:text-blue-200 text-sm">
+              <li>• Selecciona las letras con el cursor o dedo</li>
+              <li>• Las palabras pueden estar en cualquier dirección</li>
+              <li>• Las palabras encontradas se tacharán de la lista</li>
+              <li>• ¡Completa todo el puzzle para ganar!</li>
+            </ul>
           </div>
         </div>
 
-        <button id="modalNewGame" class="bg-gradient-to-r from-pink-600 hover:from-pink-700 to-fuchsia-600 hover:to-fuchsia-700 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-white hover:scale-105 transition-all duration-300 transform">
-          🎮 Nuevo Juego
-        </button>
+        <!-- Panel Derecho - Puzzle y Palabras -->
+        <div class="space-y-4 lg:col-span-2">
+          <!-- Card del Puzzle -->
+          <div
+            class="bg-white dark:bg-gray-800 shadow-xl p-6 rounded-2xl transition-all duration-300"
+          >
+            <h2
+              class="mb-4 font-bold text-gray-800 dark:text-gray-100 text-xl text-center"
+            >
+              🧩 Puzzle
+            </h2>
+            <div
+              id="puzzle"
+              class="flex justify-center items-center p-2 max-w-full min-h-[300px] overflow-auto"
+            >
+              <!-- El puzzle se renderizará aquí -->
+            </div>
+          </div>
+
+          <!-- Card de Palabras -->
+          <div
+            class="bg-white dark:bg-gray-800 shadow-xl p-6 rounded-2xl transition-all duration-300"
+          >
+            <h2
+              class="mb-4 font-bold text-gray-800 dark:text-gray-100 text-xl text-center"
+            >
+              📝 Palabras a Encontrar
+            </h2>
+            <div id="words" class="text-center">
+              <!-- La lista de palabras se renderizará aquí -->
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="z-50 fixed inset-0 flex justify-center items-center bg-black/70 backdrop-blur-sm">
-    <div class="text-center">
-      <div class="inline-block mb-4 border-4 border-white border-t-transparent rounded-full w-16 h-16 animate-spin"></div>
-      <p class="font-semibold text-white text-xl">Cargando palabras...</p>
+    <!-- Modal de Completado -->
+    <div
+      id="completionModal"
+      class="hidden z-50 fixed inset-0 justify-center items-center bg-black/50 backdrop-blur-sm p-4"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 opacity-0 shadow-2xl p-8 rounded-3xl w-full max-w-md scale-95 transition-all duration-300 transform"
+        id="modalContent"
+      >
+        <div class="text-center">
+          <div class="mb-4 text-6xl" id="modalIcon">🎉</div>
+          <h2
+            class="mb-2 font-bold text-gray-800 dark:text-gray-100 text-3xl"
+            id="modalTitle"
+          >
+            ¡Felicitaciones!
+          </h2>
+          <p class="mb-6 text-gray-600 dark:text-gray-300" id="modalMessage">
+            Has completado el puzzle
+          </p>
+
+          <div class="space-y-2 bg-gray-50 dark:bg-gray-700/50 mb-6 p-4 rounded-xl">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600 dark:text-gray-400">Tiempo:</span>
+              <span class="font-semibold text-gray-800 dark:text-gray-200" id="modalTime"
+                >00:00</span
+              >
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600 dark:text-gray-400">Puntaje:</span>
+              <span class="font-semibold text-gray-800 dark:text-gray-200" id="modalScore"
+                >0</span
+              >
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600 dark:text-gray-400">Calificación:</span>
+              <span class="font-semibold text-yellow-500" id="modalRating">⭐⭐⭐</span>
+            </div>
+          </div>
+
+          <button
+            id="modalNewGame"
+            class="bg-gradient-to-r from-pink-600 hover:from-pink-700 to-fuchsia-600 hover:to-fuchsia-700 shadow-md hover:shadow-lg px-6 py-3 rounded-lg w-full font-semibold text-white hover:scale-105 transition-all duration-300 transform"
+          >
+            🎮 Nuevo Juego
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Scripts -->
-  <script type="module" src="../src/js/app.js"></script>
-</body>
+    <!-- Loading Overlay -->
+    <div
+      id="loadingOverlay"
+      class="z-50 fixed inset-0 flex justify-center items-center bg-black/70 backdrop-blur-sm"
+    >
+      <div class="text-center">
+        <div
+          class="inline-block mb-4 border-4 border-white border-t-transparent rounded-full w-16 h-16 animate-spin"
+        ></div>
+        <p class="font-semibold text-white text-xl">Cargando palabras...</p>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="../src/js/app.js"></script>
+  </body>
 </html>

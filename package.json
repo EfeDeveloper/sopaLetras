@@ -3,10 +3,11 @@
   "version": "2.0.0",
   "description": "Juego de sopa de letras",
   "scripts": {
-    "dev": "tailwindcss -i ./src/input.css -o ./public/output.css --watch",
+    "dev": "concurrently \"npm run dev:css\" \"npm run dev:server\"",
+    "dev:css": "tailwindcss -i ./src/input.css -o ./public/output.css --watch",
+    "dev:server": "npx http-server . -p 3000 -o /index.html -c-1",
     "build": "tailwindcss -i ./src/input.css -o ./public/output.css --minify",
-    "serve": "npx http-server . -p 3000 -o /index.html",
-    "start": "npm run build && npm run serve"
+    "start": "npm run build && npx http-server . -p 3000 -o /index.html"
   },
   "keywords": [
     "word-search",
@@ -16,8 +17,9 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "tailwindcss": "^3.4.0",
     "autoprefixer": "^10.4.0",
-    "postcss": "^8.4.0"
+    "concurrently": "^9.2.1",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0"
   }
 }
