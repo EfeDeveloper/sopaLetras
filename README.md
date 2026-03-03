@@ -8,9 +8,13 @@ Juego moderno de sopa de letras (word search) con interfaz renovada, múltiples 
 
 ### 🎯 Funcionalidades Principales
 - **Palabras Aleatorias**: Obtención dinámica de palabras desde API externa con fallback local
-- **Múltiples Categorías**: Naturaleza, Tecnología, Animales, Alimentos, Deportes
-- **3 Niveles de Dificultad**: Fácil (3-6 letras), Medio (7-10 letras), Difícil (11+ letras)
-- **Sistema de Puntuación**: Basado en tiempo, dificultad y palabras encontradas
+- **3 Niveles de Dificultad**: 
+  - Fácil: 3-6 letras (grilla 12x12, 14 palabras)
+  - Medio: 6-9 letras (grilla 15x15, 14 palabras)
+  - Difícil: 9-12 letras (grilla 17x17, 14 palabras)
+- **Sistema de Puntuación**: Basado en tiempo, dificultad, palabras encontradas y penalizaciones
+- **Sistema de Pistas**: Revelación gradual de letras (penalización: -50 pts)
+- **Modo Resolver**: Completa el puzzle automáticamente (penalización: -500 pts)
 - **Cronómetro**: Seguimiento de tiempo en cada partida
 - **Modo Oscuro**: Toggle entre tema claro y oscuro con persistencia
 - **Historial de Partidas**: Almacenamiento local de estadísticas y mejores puntajes
@@ -34,16 +38,16 @@ Juego moderno de sopa de letras (word search) con interfaz renovada, múltiples 
 sopaLetras/
 ├── src/
 │   ├── js/
-│   │   ├── app.js              # Aplicación principal
+│   │   ├── app.js              # Aplicación principal y orquestador
 │   │   ├── WordAPI.js          # Gestión de palabras (API + fallback)
 │   │   ├── WordFindGame.js     # Motor del juego (Vanilla JS)
 │   │   ├── PuzzleGenerator.js  # Motor propio de generación de puzzles
 │   │   ├── Timer.js            # Sistema de cronómetro
-│   │   ├── ScoreSystem.js      # Sistema de puntuación
+│   │   ├── ScoreSystem.js      # Sistema de puntuación y rating
 │   │   ├── Storage.js          # LocalStorage para historial
-│   │   └── DarkMode.js         # Modo oscuro
+│   │   └── DarkMode.js         # Modo oscuro con persistencia
 │   ├── data/
-│   │   └── words.json          # Palabras de fallback por categoría
+│   │   └── words.json          # Palabras de fallback (general, naturaleza, tecnología)
 │   └── input.css               # Estilos base de Tailwind
 ├── public/
 │   ├── game.html               # Página del juego
@@ -89,20 +93,24 @@ Simplemente abre `index.html` en tu navegador web favorito.
 
 ## 🎮 Cómo Jugar
 
-1. **Selecciona la Configuración**:
-   - Elige una categoría (o todas)
-   - Selecciona el nivel de dificultad
-   - Haz clic en "Nuevo Juego"
+1. **Inicia el Juego**:
+   - Selecciona el nivel de dificultad (Fácil, Medio o Difícil)
+   - Haz clic en "🎮 Nuevo Juego"
+   - Se generará una sopa de letras con 14 palabras aleatorias
 
 2. **Busca las Palabras**:
    - Selecciona las letras con el mouse o dedo en dispositivos táctiles
-   - Las palabras pueden estar en cualquier dirección: horizontal, vertical o diagonal
+   - Las palabras pueden estar en 8 direcciones: horizontal, vertical o diagonal
    - Pueden leerse de izquierda a derecha o al revés
 
-3. **Completa el Puzzle**:
-   - Encuentra todas las palabras de la lista
-   - Observa tu tiempo y puntaje
-   - Al completar, verás tus estadísticas finales
+3. **Usa las Ayudas** (opcional):
+   - **💡 Pista**: Revela 2 letras de una palabra (-50 pts)
+   - **🔍 Resolver**: Completa automáticamente el puzzle (-500 pts)
+
+4. **Completa el Puzzle**:
+   - Encuentra todas las 14 palabras de la lista
+   - Observa tu tiempo y puntaje en tiempo real
+   - Al completar, verás tus estadísticas finales y rating de estrellas
 
 ## 🔧 Tecnologías
 
@@ -114,7 +122,6 @@ Simplemente abre `index.html` en tu navegador web favorito.
 
 ### APIs Externas (con Fallback)
 - Random Word API: `https://random-word-api.herokuapp.com`
-- Greenborn API: `https://clientes.api.greenborn.com.ar`
 - Fallback: Archivo JSON local con 100+ palabras
 
 ### Almacenamiento
@@ -124,13 +131,15 @@ Simplemente abre `index.html` en tu navegador web favorito.
 ## 📊 Sistema de Puntuación
 
 ### Cálculo de Puntaje
+- **Puntos por Palabra**: `longitud × 10 × multiplicador_dificultad`
 - **Puntos Base**: `palabras_encontradas × 100 × multiplicador_dificultad`
-- **Bonus de Tiempo**: Hasta 500 puntos por completar rápido
+- **Bonus de Tiempo**: Hasta 500 puntos (objetivo: < 3 minutos)
 - **Multiplicadores**:
   - Fácil: x1.0
   - Medio: x1.5
   - Difícil: x2.0
 - **Penalizaciones**:
+  - Usar "Pista": -50 puntos por cada uso
   - Usar "Resolver": -500 puntos
 
 ### Calificación
@@ -154,16 +163,6 @@ colors: {
 }
 ```
 
-### Agregar Más Categorías
-Edita `src/data/words.json`:
-```json
-{
-  "categories": {
-    "tu_categoria": ["palabra1", "palabra2", ...]
-  }
-}
-```
-
 ## 🐛 Resolución de Problemas
 
 ### El juego no carga
@@ -183,12 +182,9 @@ Edita `src/data/words.json`:
 ## 📝 Cambios de la Versión 2.0
 
 ### Removido ❌
-- jQuery (85KB eliminados)
-- Bootstrap (dependencia eliminada)
-- Font Awesome (no utilizado)
+- Dependencias jQuery y Bootstrap (no necesarias)
 - CSS custom (~300 líneas → reemplazadas con Tailwind)
-- plugins/wordfindgame.js (reescrito en vanilla JS)
-- plugins/wordfind.js (reemplazado con motor propio)
+- Motor de puzzles de terceros → ahora usa PuzzleGenerator.js propio
 
 ### Agregado ✅
 - **PuzzleGenerator.js**: Motor propio de generación de puzzles (más confiable y moderno)
@@ -197,7 +193,8 @@ Edita `src/data/words.json`:
 - Sistema de palabras aleatorias con API
 - Modo oscuro con persistencia
 - Timer y sistema de puntuación
-- Categorías y niveles de dificultad
+- 3 niveles de dificultad con grillas adaptativas
+- Sistema de pistas y resolución automática
 - LocalStorage para historial
 - Soporte touch para móviles
 - Arquitectura modular ES6
@@ -235,11 +232,11 @@ También puedes mirar la lista de todos los [contribuyentes](https://github.com/
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia BSD 3-Clause - mira el archivo [LICENSE](LICENSE) para detalles
+Este proyecto está bajo la Licencia MIT - mira el archivo [LICENSE](LICENSE) para detalles
 
 ## 🙏 Expresiones de Gratitud
 
-- **wordfind.js**: Gracias a [bunkat](https://github.com/bunkat/wordfind) por el generador de puzzles
+- **Random Word API**: Por proporcionar palabras aleatorias en español
 - **Tailwind CSS**: Por el increíble framework de utilidades
 - A toda la comunidad de desarrolladores que hace proyectos como este posibles
 
@@ -253,6 +250,3 @@ Desarrollado con ❤️ - Versión 2.0 (2026)
 - Da las gracias públicamente 🤓.
 - etc.
 
----
-
-Plantilla para Readme gracias a: **[Villanuevand](https://github.com/Villanuevand)** 😊

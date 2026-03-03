@@ -7,20 +7,14 @@ export class WordAPI {
     this.cacheDuration = CACHE_DURATION_MS;
   }
 
-  async fetchWords(count = 15, language = 'es', options = {}) {
+  async fetchWords(count = 14, language = 'es', options = {}) {
     const { difficulty } = options;
 
     try {
-      const words = await this._fetchFromAPI(count * 3, language);
+      const words = await this._fetchFromAPI(count, language, difficulty);
       
-      if (words && words.length > 0) {
-        const filtered = difficulty 
-          ? this._filterByDifficulty(words, difficulty, count)
-          : words.slice(0, count);
-        
-        if (filtered.length >= count) {
-          return filtered;
-        }
+      if (words && words.length >= count) {
+        return words.slice(0, count);
       }
     } catch (error) {
       console.warn('API fallback:', error.message);
@@ -29,48 +23,34 @@ export class WordAPI {
     return await this._fetchFromLocal(count, { difficulty });
   }
 
-  async _fetchFromAPI(count, language) {
-    const cached = this._getFromSessionCache();
-    if (cached) {
-      return this._shuffleArray(cached).slice(0, count);
-    }
+  async _fetchFromAPI(count, language, difficulty) {
+    const lengthRange = this._getLengthRange(difficulty);
+    const allWords = [];
 
-    try {
-      const response = await fetch(
-        `https://random-word-api.herokuapp.com/word?lang=${language}&number=${count * 2}`
-      );
-      
-      if (!response.ok) throw new Error('API primaria no disponible');
-      
-      const words = await response.json();
-      
-      if (words && words.length > 0) {
-        this._saveToSessionCache(words);
-        return words;
+    for (let length = lengthRange.min; length <= lengthRange.max; length++) {
+      try {
+        const response = await fetch(
+          `https://random-word-api.herokuapp.com/word?lang=${language}&length=${length}&number=5`
+        );
+        
+        if (response.ok) {
+          const words = await response.json();
+          if (words && words.length > 0) {
+            allWords.push(...words);
+          }
+        }
+      } catch (error) {
+        console.warn(`API falló para longitud ${length}:`, error.message);
       }
-    } catch (error) {
-      console.warn('API primaria falló:', error.message);
+      
+      if (allWords.length >= count) break;
     }
 
-    try {
-      const response = await fetch(
-        `https://clientes.api.greenborn.com.ar/public-random-word?cant=${count * 2}&l=${language}`
-      );
-      
-      if (!response.ok) throw new Error('API secundaria no disponible');
-      
-      const data = await response.json();
-      const words = Array.isArray(data) ? data : data.words || [];
-      
-      if (words.length > 0) {
-        this._saveToSessionCache(words);
-        return words;
-      }
-    } catch (error) {
-      console.warn('API secundaria falló:', error.message);
+    if (allWords.length > 0) {
+      return this._shuffleArray(allWords);
     }
 
-    throw new Error('Todas las APIs fallaron');
+    throw new Error('El llamado a la API falló');
   }
 
   async _fetchFromLocal(count, options = {}) {
@@ -100,23 +80,22 @@ export class WordAPI {
     return this._shuffleArray(words).slice(0, count);
   }
 
-  _filterByDifficulty(words, difficulty, count) {
-    let filtered = [];
-
+  _getLengthRange(difficulty) {
     switch (difficulty) {
       case 'easy':
-        filtered = words.filter(w => w.length >= 3 && w.length <= 6);
-        break;
+        return { min: 3, max: 6 };
       case 'medium':
-        filtered = words.filter(w => w.length >= 7 && w.length <= 10);
-        break;
+        return { min: 6, max: 9 };
       case 'hard':
-        filtered = words.filter(w => w.length >= 11);
-        break;
+        return { min: 9, max: 12 };
       default:
-        filtered = words;
+        return { min: 4, max: 8 };
     }
+  }
 
+  _filterByDifficulty(words, difficulty, count) {
+    const range = this._getLengthRange(difficulty);
+    const filtered = words.filter(w => w.length >= range.min && w.length <= range.max);
     return this._shuffleArray(filtered).slice(0, count);
   }
 
