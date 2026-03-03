@@ -7,7 +7,7 @@
     "dev:css": "tailwindcss -i ./src/input.css -o ./public/output.css --watch",
     "dev:server": "npx http-server . -p 3000 -o /index.html -c-1",
     "build": "tailwindcss -i ./src/input.css -o ./public/output.css --minify",
-    "start": "npm run build && npx http-server . -p 3000 -o /index.html"
+    "start": "npx http-server . -p 3000"
   },
   "keywords": [
     "word-search",
@@ -16,6 +16,9 @@
   ],
   "author": "",
   "license": "MIT",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
     "concurrently": "^9.2.1",
