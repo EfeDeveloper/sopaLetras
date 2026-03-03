@@ -1,30 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
     <meta charset="utf-8" />
-    <title>Sopa de letras</title>
+    <title>Sopa de Letras - Juego de Palabras</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Juego de sopa de letras - Encuentra palabras ocultas en el puzzle" />
     <link rel="shortcut icon" href="image/Browser.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="./css/styleIndex.css" />
+    <link rel="stylesheet" href="./public/output.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body>
-    <div class="container">
-      <div class="card">
-        <div class="circle">
-          <h2>Sopa de letras</h2>
+  <body class="font-poppins">
+    <!-- Contenedor Principal -->
+    <div class="flex flex-col justify-center items-center bg-gradient-to-br from-pink-600 dark:from-gray-900 to-fuchsia-500 dark:to-gray-800 p-4 min-h-screen transition-colors duration-300">
+      
+      <!-- Botones superiores -->
+      <div class="top-4 right-4 z-50 fixed flex gap-4">
+        <!-- Botón Limpiar Caché -->
+        <button id="clearCacheBtn" 
+                class="bg-white/20 dark:bg-gray-700/50 shadow-lg hover:shadow-xl backdrop-blur-sm p-3 rounded-full text-white hover:scale-110 transition-all duration-300" 
+                aria-label="Limpiar caché"
+                title="Limpiar caché (configuraciones e historial)">
+          <span class="text-xl">🧹</span>
+        </button>
+        
+        <!-- Botón Modo Oscuro -->
+        <button id="darkModeToggle" 
+                class="bg-white/20 dark:bg-gray-700/50 shadow-lg hover:shadow-xl backdrop-blur-sm p-3 rounded-full text-white hover:scale-110 transition-all duration-300" 
+                aria-label="Alternar modo oscuro"
+                title="Cambiar modo oscuro">
+          <span class="dark:hidden text-xl">🌙</span>
+          <span class="hidden dark:inline text-xl">☀️</span>
+        </button>
+      </div>
+
+      <!-- Card Principal -->
+      <div class="relative bg-white/90 dark:bg-gray-800/90 shadow-2xl hover:shadow-3xl backdrop-blur-md p-8 rounded-3xl w-full max-w-2xl hover:scale-105 transition-all duration-300">
+        
+        <!-- Header -->
+        <div class="bg-gradient-to-br from-pink-600 dark:from-pink-700 to-fuchsia-600 dark:to-fuchsia-700 -mx-8 -mt-8 mb-6 p-8 rounded-t-3xl">
+          <h1 class="drop-shadow-lg font-bold text-white text-4xl md:text-5xl text-center">
+            🎮 Sopa de Letras
+          </h1>
         </div>
-        <div class="content">
-          <p>
-            Este juego consiste en encontrar un número determinado de palabras
-            enlazando letras de forma horizontal, vertical o diagonal y en
-            cualquier sentido, tanto de derecha a izquierda como de izquierda a
-            derecha, y de arriba a abajo, como de abajo a arriba. Objetivo:
-            Descubrir palabras las palabras propuestas de tal forma que se logre
-            el 100%.
-          </p>
-          <a href="./src/soup.html">Continuar</a>
+
+        <!-- Contenido -->
+        <div class="space-y-6">
+          <div class="text-center">
+            <h2 class="mb-4 font-semibold text-gray-800 dark:text-gray-100 text-2xl">
+              ¿Listo para el desafío?
+            </h2>
+            <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
+              Este juego consiste en encontrar un número determinado de palabras
+              enlazando letras de forma <strong>horizontal</strong>, <strong>vertical</strong> o <strong>diagonal</strong> y en
+              cualquier sentido, tanto de derecha a izquierda como de izquierda a
+              derecha, y de arriba a abajo, como de abajo a arriba.
+            </p>
+          </div>
+
+          <div class="bg-pink-50 dark:bg-gray-700/50 p-4 border-pink-600 dark:border-fuchsia-500 border-l-4 rounded-xl">
+            <p class="text-gray-800 dark:text-gray-200">
+              <strong class="text-pink-600 dark:text-fuchsia-400">🎯 Objetivo:</strong> 
+              Descubrir todas las palabras propuestas para lograr el 100% de completitud.
+            </p>
+          </div>
+
+          <!-- Características -->
+          <div class="gap-4 grid grid-cols-1 md:grid-cols-2 mt-6">
+            <div class="flex items-start space-x-3">
+              <span class="text-2xl">📊</span>
+              <div>
+                <h3 class="font-semibold text-gray-800 dark:text-gray-100">Niveles de Dificultad</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Fácil, medio y difícil</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-2xl">🏆</span>
+              <div>
+                <h3 class="font-semibold text-gray-800 dark:text-gray-100">Sistema de Puntuación</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Compite contra el tiempo</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-2xl">🎨</span>
+              <div>
+                <h3 class="font-semibold text-gray-800 dark:text-gray-100">Categorías Variadas</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Tecnología, naturaleza y más</p>
+              </div>
+            </div>
+            <div class="flex items-start space-x-3">
+              <span class="text-2xl">📱</span>
+              <div>
+                <h3 class="font-semibold text-gray-800 dark:text-gray-100">Responsive</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">Juega en cualquier dispositivo</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón Continuar -->
+          <div class="mt-8 text-center">
+            <a href="./public/game.html" 
+               class="inline-block bg-gradient-to-r from-pink-600 dark:from-pink-700 to-fuchsia-600 dark:to-fuchsia-700 shadow-lg hover:shadow-2xl px-10 py-4 rounded-full font-semibold text-white text-lg hover:scale-105 transition-all hover:-translate-y-1 duration-300 transform">
+              Continuar →
+            </a>
+          </div>
         </div>
       </div>
+
+      <!-- Footer -->
+      <div class="mt-8 text-white/80 dark:text-gray-400 text-sm text-center">
+        <p>© 2026 Sopa de Letras - Versión 2.0</p>
+      </div>
     </div>
+
+    <!-- Script para Dark Mode -->
+    <script type="module">
+      import { DarkMode } from './src/js/DarkMode.js';
+      
+      const darkMode = new DarkMode();
+      darkMode.init();
+      
+      const toggleButton = document.getElementById('darkModeToggle');
+      if (toggleButton) {
+        toggleButton.addEventListener('click', () => {
+          darkMode.toggle();
+        });
+      }
+      
+      // Botón limpiar caché
+      const clearCacheBtn = document.getElementById('clearCacheBtn');
+      if (clearCacheBtn) {
+        clearCacheBtn.addEventListener('click', () => {
+          const confirmClean = confirm(
+            '🧹 ¿Estás seguro de que quieres limpiar el caché?\n\n' +
+            'Esto borrará:\n' +
+            '• Configuraciones guardadas\n' +
+            '• Historial de juegos\n' +
+            '• Preferencia de modo oscuro\n\n' +
+            'Útsalo si tienes problemas al cargar el juego.'
+          );
+          
+          if (confirmClean) {
+            try {
+              localStorage.clear();
+              sessionStorage.clear();
+              alert('✅ Caché limpiado exitosamente.\n\nLa página se recargará.');
+              window.location.reload();
+            } catch (error) {
+              console.error('Error al limpiar caché:', error);
+              alert('❌ Error al limpiar el caché. Intenta desde el menú del navegador.');
+            }
+          }
+        });
+      }
+    </script>
   </body>
 </html>
